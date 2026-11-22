@@ -3,14 +3,12 @@ const preloaderWaitindTime = 1200;
 const cardsOnPage = 5;
 const BASE_URL = 'https://v-content.practicum-team.ru';
 const endpoint = `${BASE_URL}/api/videos?pagination[pageSize]=${cardsOnPage}&`;
-
 /* ЭЛЕМЕНТЫ СТРАНИЦЫ */
 const cardsList = document.querySelector('.content__list');
 const cardsContainer = document.querySelector('.content__list-container');
 const videoContainer = document.querySelector('.result__video-container');
 const videoElement = document.querySelector('.result__video');
 const form = document.querySelector('form');
-
 /* ТЕМПЛЕЙТЫ */
 const cardTmp = document.querySelector('.cards-list-item-template');
 const preloaderTmp = document.querySelector('.preloader-template');
@@ -23,7 +21,6 @@ const moreButtonTmp = document.querySelector('.more-button-template');
 let cardsOnPageState = [];
 
 // Первая загрузка ✅
-
 showPreloader(preloaderTmp, videoContainer);
 showPreloader(preloaderTmp, cardsContainer);
 mainMechanics(endpoint);
@@ -41,7 +38,6 @@ form.onsubmit = (e) => {
   [...videoContainer.children].forEach((el) => {
     el.className === 'error' && el.remove();
   });
-
   showPreloader(preloaderTmp, videoContainer);
   showPreloader(preloaderTmp, cardsContainer);
 
@@ -61,7 +57,6 @@ async function mainMechanics(endpoint) {
   try {
     const data = await (await fetch(endpoint)).json();
     cardsOnPageState = data.results;
-
     if (!data?.results?.[0]) {
       throw new Error('not-found');
     }
@@ -72,7 +67,6 @@ async function mainMechanics(endpoint) {
       cardTmp,
       container: cardsList,
     });
-
     setVideo({
       baseUrl: BASE_URL,
       video: videoElement,
@@ -86,7 +80,6 @@ async function mainMechanics(endpoint) {
     await delay(preloaderWaitindTime);
     removePreloader(videoContainer, '.preloader');
     removePreloader(cardsContainer, '.preloader');
-
     // Добавляем класс для стилизации скроллбара
     cardsContainer.classList.add('custom-scrollbar');
 
@@ -97,7 +90,6 @@ async function mainMechanics(endpoint) {
       currentLinkClassName: 'content__card-link_current',
       mainVideo: videoElement,
     });
-
     showMoreCards({
       dataArray: data,
       buttonTemplate: moreButtonTmp,
@@ -118,7 +110,6 @@ async function mainMechanics(endpoint) {
     removePreloader(cardsContainer, '.preloader');
   }
 }
-
 /* УТИЛИТЫ */
 
 // Простой промис, чтобы легче ставить паузу ✅
@@ -136,7 +127,6 @@ async function waitForReadyVideo(video) {
     video.oncanplaythrough = resolve;
   });
 }
-
 // Устанавливает прелоадер на время загрузки данных ✅
 function showPreloader(tmp, parent) {
   const node = tmp.content.cloneNode(true);
@@ -153,7 +143,6 @@ function removePreloader(parent, preloaderSelector) {
 
   console.log('убрал прелоадер');
 }
-
 // Добавляет карточки в контейнер, собирая их из данных API ✅
 function appendCards({ baseUrl, dataArray, cardTmp, container }) {
   dataArray.forEach((el) => {
@@ -172,7 +161,6 @@ function appendCards({ baseUrl, dataArray, cardTmp, container }) {
   });
   console.log('Сгенерировал карточки');
 }
-
 // Устанавливет внужное видео в контейнер ✅
 function setVideo({ baseUrl, video, videoUrl, posterUrl }) {
   video.setAttribute('src', `${baseUrl}${videoUrl}`);
@@ -181,7 +169,6 @@ function setVideo({ baseUrl, video, videoUrl, posterUrl }) {
 }
 
 // получает данные из формы и сериализует как надо ✅
-
 function serializeFormData(form) {
   const city = form.querySelector('input[name="city"]');
   const checkboxes = form.querySelectorAll('input[name="time"]');
@@ -195,7 +182,6 @@ function serializeFormData(form) {
     timeArray: checkedValuesArray,
   };
 }
-
 // Генерирует строку с фильтрами запросов в API в зависимости от данных из формы ✅
 function generateFilterRequest(endpoint, city, timeArray) {
   if (city) {
@@ -209,7 +195,6 @@ function generateFilterRequest(endpoint, city, timeArray) {
   console.log('Сгенерировал строку адреса запроса в API из данных формы');
   return endpoint;
 }
-
 // переключает текущее видео ✅
 function chooseCurrentVideo({
   baseUrl,
@@ -245,7 +230,6 @@ function chooseCurrentVideo({
     });
   }
 }
-
 // вывожу интерфейс, когда видео не найдено ✅
 function showError(container, errorTemplate, errorMessage) {
   const node = errorTemplate.content.cloneNode(true);
@@ -255,7 +239,6 @@ function showError(container, errorTemplate, errorMessage) {
 }
 
 // вывожу больше видео, если в пагинации больше страниц, чем показано
-
 function showMoreCards({
   dataArray,
   buttonTemplate,
